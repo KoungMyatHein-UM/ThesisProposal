@@ -11,7 +11,8 @@
 
 
 ### 2. User Identification Based on Keystroke Dynamics
-- **To what extent can users be reliably identified based on keystroke dynamics?**
+- ***To what extent can users be reliably identified based on keystroke dynamics?***
+
 - Which keystroke timing features contribute most to user discrimination?
 - How stable are keystroke dynamics–based identifiers across multiple typing sessions?
 - How much typing data is required to accurately identify a user?
