@@ -9,6 +9,7 @@
 - What is the impact of message-oriented layering on implementation complexity and developer effort in small-scale systems?
 - How does introducing message-based boundaries between layers affect the placement and enforcement of security concerns?
 
+No PoC exists for this topic.
 
 ### 2. User Identification Based on Keystroke Dynamics
 - ***To what extent can users be reliably identified based on keystroke dynamics?***
