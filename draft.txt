@@ -1,0 +1,97 @@
+1 controller request -> 4 *external* service layer calls -> 4 database persistence layer calls
+
+1000 requests -> 4000 external calls -> 4000 database calls
+
+Rate limiting is done by external agents after the call (no internal rate-limiting) -> calls can time-out
+
+Internal rate limiting using pools? -> messy Spring architecture (each process must be context-aware to access the shared pool)
+
+
+Solution: Limit each layer instance.
+
+Before
+------
+1000 controller instances -> 4000 service instances -> 4000 persistence instances
+
+After
+-----
+1000 controller instances -> 1000 service instances -> 1000 persistence instances
+
+Results: rate-limiting is done before any call is made. Time-outs are internal affairs; does not involve external agents.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+          |
+          V
+--------------------
+  Controller Layer
+--------------------
+          |
+          |
+          V
+--------------------
+    Service Layer
+--------------------
+          |
+          |
+          V
+--------------------
+  Persistence Layer
+--------------------
+          |
+          |
+          V
+--------------------
+--------------------
+
+
+Problem: What happens if persistence fails? I.e. database goes down -> no connection
+Result: Entire pipeline fails -> information is lost on all layers
+
+Problem: What happens if you need to make changes to persistence layer?
+Result: You must wait for all pipelines to exit
+
+
+          |
+          V
+---------------------
+| Controller Layer  |
+---------------------
+          |                       
+       Message <----------------------------
+                                           |
+                                           |
+---------------------                      |
+|   Service Layer   |                      |
+---------------------                      V
+          |                       -------------------
+       Message <----------------> | Message Manager |
+                                  -------------------
+                                           ∧
+---------------------                      |
+| Persistence Layer |                      |
+---------------------                      |
+          |                                |
+       Message <----------------------------
+          |
+          V 
+--------------------
+--------------------
+
+Solution: micro-layers -> you can change persistence strategy anytime. Connection failures are easily recoverable.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
